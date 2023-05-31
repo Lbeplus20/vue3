@@ -51,6 +51,7 @@
                             if (res.code=='200') {
                                 this.$router.push("/")
                                 localStorage.setItem("user",JSON.stringify(res.data))//存储用户信息到浏览器
+                                localStorage.setItem("menus",JSON.stringify(res.data.menus))//存储用户信息到浏览器
                                 this.$message.success("登录成功")
                             } else {
                                 this.$message.error(res.msg)

@@ -4,7 +4,7 @@
             <!--    侧边栏-->
             <el-aside :width="sideWidth+'px'"
                       style="background-color: rgb(238, 241, 246);box-shadow: 2px 0 6px rgb(0 21 41) ">
-                <Aside :isCollapse="isCollapse" :logoTextShow="logoTextShow" />
+                <Aside :isCollapse="isCollapse" :logoTextShow="logoTextShow" :menu="user.menus" />
             </el-aside>
 
             <el-container>

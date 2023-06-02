@@ -24,7 +24,7 @@
             >
                 <el-button type="danger" slot="reference">批量删除<i class="el-icon-remove-outline"></i></el-button>
             </el-popconfirm>
-            <!--            <el-upload action="http://localhost:8088/user/import" :show-file-list="false"-->
+            <!--            <el-upload action="http://ocalhost:8088/user/import" :show-file-list="false"-->
             <!--                       :on-success="handleExcelSuccess" accept="xlsx" style="display: inline-block">-->
             <!--                <el-button type="primary">导入<i class="el-icon-bottom"></i></el-button>-->
             <!--            </el-upload>-->
@@ -42,7 +42,7 @@
 
             <el-table-column label="操作" width="280">
                 <template slot-scope="scope">
-                    <el-button type="info" @click="selectMenu(scope.row.id)">分配菜单 <i class="el-icon-menu"></i>
+                    <el-button type="info" @click="selectMenu(scope.row)">分配菜单 <i class="el-icon-menu"></i>
                     </el-button>
                     <el-button type="success" @click="handleEdit(scope.row)">编辑<i class="el-icon-edit"></i></el-button>
                     <el-popconfirm
@@ -144,7 +144,10 @@
                 },
                 expends: [],
                 checks: [],
-                roleId: 0
+                roleId: 0,
+                //设置管理员权限
+                roleFlag:'',
+                ids:[]
             }
         },
         created() {
@@ -233,6 +236,9 @@
                     this.total = res.data.total
 
                 })
+                this.request.get("/menu/ids").then(r => {
+                    this.ids = r.data
+                })
 
             },
             handleSizeChange(pageSize) {
@@ -243,18 +249,19 @@
                 this.pageNum = pageNum
                 this.load()
             },
-            exp() {
-                window.open("http://localhost:8088/role/export")
-            },
+            // exp() {
+            //     window.open("http://:8088/role/export")
+            // },
             handleExcelSuccess() {
                 this.$message.success("文件导入成功！")
                 this.load()
             },
 
-            selectMenu(roleId) {
+            selectMenu(role) {
                 this.menuDialogVisible = true
                 this.qd = true
-                this.roleId = roleId
+                this.roleId = role.id
+                this.roleFlag = role.flag
                 //请求菜单数据
                 this.request.get("/menu").then(res => {
                     this.menuData = res.data
@@ -262,11 +269,21 @@
                     this.expends = this.menuData.map(v => v.id)
                 })
 
-
-                this.request.get("/role/roleMenu/" + roleId).then(res => {
+                this.request.get("/role/roleMenu/" + this.roleId).then(res => {
                     this.checks = res.data
-                })
+                        this.ids.forEach(id=>{
+                            if(!this.checks.includes(id)){
+                                //$nextTick未来元素处理
+                                this.$nextTick(()=>{
+                                    //跟选中的id进行对比
+                                    this.$refs.tree.setChecked(id,false)
+                                })
 
+                            }
+                        })
+                    //先渲染弹窗里的元素
+                    this.menuDialogVisible=true
+                    })
             },
             //分配菜单的确定
             saveRoleMenu() {
@@ -275,6 +292,12 @@
                         if (res.code === '200') {
                             this.$message.success("绑定成功")
                             this.menuDialogVisible = false
+                            //当分配完菜单后
+
+                            //操作管理员角色后需要重新登录
+                            if (this.roleFlag==='ROLE_ADMIN'){
+                                this.$store.commit("logout")
+                            }
                         }else {
                             this.$message.error(res.msg)
                         }

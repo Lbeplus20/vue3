@@ -25,7 +25,7 @@
             >
                 <el-button type="danger" slot="reference">批量删除<i class="el-icon-remove-outline"></i></el-button>
             </el-popconfirm>
-            <el-upload action="http://localhost:8088/user/import" :show-file-list="false"
+            <el-upload :action="'http://' + serverIp + ':8088/user/import'" :show-file-list="false"
                        :on-success="handleExcelSuccess" accept="xlsx" style="display: inline-block">
                 <el-button type="primary">导入<i class="el-icon-bottom"></i></el-button>
             </el-upload>
@@ -123,6 +123,8 @@
 </template>
 
 <script>
+    import {serverIp} from "../../public/config";
+
     export default {
         name: "User",
         data() {
@@ -138,7 +140,8 @@
                 //确定，修改按钮
                 qd: false,
                 xg: false,
-                roles:[]
+                roles:[],
+                serverIp:serverIp
 
             }
         },
@@ -241,7 +244,7 @@
                 this.load()
             },
             exp() {
-                window.open("http://localhost:8088/user/export")
+                window.open(`http://${serverIp}:8088/user/export`)
             },
             handleExcelSuccess() {
                 this.$message.success("文件导入成功！")

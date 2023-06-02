@@ -25,7 +25,7 @@
             >
                 <el-button type="danger" slot="reference">批量删除<i class="el-icon-remove-outline"></i></el-button>
             </el-popconfirm>
-            <!--            <el-upload action="http://localhost:8088/user/import" :show-file-list="false"-->
+            <!--            <el-upload action="http://:8088/user/import" :show-file-list="false"-->
             <!--                       :on-success="handleExcelSuccess" accept="xlsx" style="display: inline-block">-->
             <!--                <el-button type="primary">导入<i class="el-icon-bottom"></i></el-button>-->
             <!--            </el-upload>-->
@@ -40,6 +40,7 @@
             <el-table-column prop="id" label="Id" width="80"></el-table-column>
             <el-table-column prop="name" label="名称"></el-table-column>
             <el-table-column prop="path" label="路径"></el-table-column>
+            <el-table-column prop="pagePath" label="页面路径"></el-table-column>
             <el-table-column label="图标" class-name="/fontSize18" align="center" label-class-name="fontSize12">
                 <template slot-scope="scope">
                    <span  :class="scope.row.icon" />
@@ -79,8 +80,12 @@
                 <el-form-item label="路径">
                     <el-input v-model="form.path" autocomplete="off"></el-input>
                 </el-form-item>
+                <el-form-item label="页面路径">
+                    <el-input v-model="form.pagePath" autocomplete="off"></el-input>
+                </el-form-item>
 
-<!--                下拉选择框-->
+
+                <!--                下拉选择框-->
                 <el-form-item label="图标">
                   <el-select clearable v-model="form.icon" placeholdr="请选择" style="width:100%">
                       <el-option v-for="item in options" :key="item.name" :label="item.name"

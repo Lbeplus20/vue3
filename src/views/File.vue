@@ -6,7 +6,7 @@
             <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
             <el-button class="ml-5" type="warning" @click="reset">重置</el-button>
         </div>
-        <el-upload action="http://localhost:8088/file/upload" :show-file-list="false"
+        <el-upload :action="'http://' + serverIp + ':8088/file/upload'" :show-file-list="false"
                    :on-success="handleFileUploadSuccess"  style="display: inline-block">
             <el-button type="primary">上传文件<i class="el-icon-top"></i></el-button>
         </el-upload>
@@ -83,6 +83,8 @@
 </template>
 
 <script>
+    import {serverIp} from "../../public/config";
+
     export default {
         name: "File",
         data(){
@@ -94,7 +96,8 @@
                 multipleSelection:[],
                 pageNum:1,
                 pageSize:10,
-                total:0
+                total:0,
+                serverIp:serverIp
 
             }
         },

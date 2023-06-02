@@ -4,7 +4,7 @@
         <el-upload
 
                 class="avatar-uploader"
-                action="http://localhost:8088/file/upload"
+                :action="'http://' + serverIp +':8088/file/upload'"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 >
@@ -39,12 +39,15 @@
     实现图像的更新
 -->
 <script>
+    import {serverIp} from "../../public/config";
+
     export default {
         name: "Person",
         data(){
             return{
                 form:{},
-                user:localStorage.getItem("user")?JSON.parse(localStorage.getItem("user")):{}
+                user:localStorage.getItem("user")?JSON.parse(localStorage.getItem("user")):{},
+                serverIp :serverIp
             }
         },
         created() {
